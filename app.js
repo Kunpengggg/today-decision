@@ -217,7 +217,7 @@ const tarotRanks = {
 const types = [
   { key: "事业", words: ["工作", "客户", "升职", "跳槽", "辞职", "创业", "面试", "项目", "续约"], need: "目标、筹码、对方反馈", chance: "能用一次清晰表达换来资源或位置变化", risk: "容易只看机会，不看承诺成本", action: "先写出你的底线、备选方案和一句开场白" },
   { key: "财务", words: ["钱", "投资", "买", "卖", "借", "理财", "涨薪", "报价", "车", "房"], need: "预算、现金流、退出条件", chance: "适合把模糊欲望转成数字判断", risk: "容易被短期情绪或优惠刺激推着走", action: "先列总成本、最坏情况和可撤回节点" },
-  { key: "关系", words: ["恋爱", "表白", "复合", "分手", "朋友", "家人", "同事", "沟通", "结婚"], need: "真实感受、边界、回应质量", chance: "有机会通过一次温和表达减少误会", risk: "容易把对方的一次反应解读成全部答案", action: "先表达事实和感受，不急着要求对方立刻表态" },
+  { key: "关系", words: ["恋爱", "表白", "复合", "分手", "朋友", "家人", "同事", "沟通", "结婚", "对方", "说清楚", "解释", "道歉"], need: "真实感受、边界、回应质量", chance: "有机会通过一次温和表达减少误会", risk: "容易把对方的一次反应解读成全部答案", action: "先表达事实和感受，不急着要求对方立刻表态" },
   { key: "学习", words: ["学习", "考试", "报名", "课程", "读书", "证书", "留学"], need: "时间表、反馈、练习密度", chance: "适合把兴趣变成可执行的训练计划", risk: "容易沉迷规划而没有开始", action: "先安排一个 30 分钟的最小学习单元" },
   { key: "健康", words: ["身体", "医院", "药", "病", "体检", "运动", "健身", "睡眠"], need: "身体信号、专业意见、可持续性", chance: "适合建立小而稳定的身体秩序", risk: "容易忽略专业判断或突然用力过猛", action: "先选择低强度动作，并保留观察记录" }
 ];
@@ -229,7 +229,7 @@ const intentFrames = [
   { key: "买车买房", words: ["买车", "车", "买房", "房子"], need: "总成本、使用频率、现金流、贷款压力", chance: "如果使用场景高频且资金安全，购买能提升效率和确定感", risk: "容易被优惠、面子或短期兴奋推着做长期承诺", action: "先列裸价、保险、税费、维护和最坏现金流，再设置冷静期" },
   { key: "投资理财", words: ["投资", "理财", "股票", "基金", "币", "贷款", "借钱"], need: "本金安全、退出机制、风险承受、信息来源", chance: "适合先做小仓位学习，而不是一次押注", risk: "高收益叙事会遮住本金风险", action: "先写清楚最大可亏金额和退出条件，不用借贷资金入场" },
   { key: "客户谈判", words: ["客户", "续约", "报价", "谈判", "涨薪"], need: "筹码、对方痛点、底线、替代方案", chance: "一次清晰表达可能换来资源、价格或合作位置变化", risk: "准备不足时，主动沟通会变成被动让步", action: "先写底线、理想目标、可交换条件和一句开场白" },
-  { key: "关系表达", words: ["表白", "复合", "分手", "结婚", "恋爱"], need: "真实感受、对方回应、关系边界、长期期待", chance: "适合把模糊关系推进到更清楚的位置", risk: "容易把自己的期待投射成对方的承诺", action: "先表达事实和感受，只提出一个明确但不过度压迫的问题" },
+  { key: "关系表达", words: ["表白", "复合", "分手", "结婚", "恋爱", "对方", "说清楚", "解释", "道歉"], need: "真实感受、对方回应、关系边界、长期期待", chance: "适合把模糊关系推进到更清楚的位置", risk: "容易把自己的期待投射成对方的承诺", action: "先表达事实和感受，只提出一个明确但不过度压迫的问题" },
   { key: "学习提升", words: ["报名", "课程", "考试", "证书", "留学", "学习"], need: "目标用途、时间投入、反馈机制、机会成本", chance: "学习能把焦虑转成可积累的能力", risk: "容易买课即满足，真正练习不足", action: "先体验一节或完成一个练习，再决定是否付费或长期投入" },
   { key: "健康调整", words: ["健身", "运动", "睡眠", "体检", "医院", "吃药"], need: "身体信号、专业意见、可持续强度、恢复周期", chance: "小而稳定的身体秩序会带来长期收益", risk: "突然上强度或忽视专业意见会带来反效果", action: "先做低强度版本，记录一周身体反馈；医疗问题优先咨询医生" }
 ];
@@ -295,6 +295,18 @@ const followupTemplates = {
     ["这件事最小可撤回的一步是什么？", "比如：先问一句 / 先试10分钟"],
     ["什么信号出现后你会继续或停止？", "比如：对方回复 / 预算超了 / 状态变差"]
   ]
+};
+const contextDisplayNames = {
+  "低成本娱乐": "日常小事",
+  "一般购买": "花钱购买",
+  "资产承诺": "大额投入",
+  "高承诺低可逆": "重大决定",
+  "关系表达": "关系沟通",
+  "职业沟通": "工作沟通",
+  "学习投入": "学习投入",
+  "健康调整": "健康调整",
+  "可逆试探": "小步试探",
+  "普通可逆": "可以先试的小事"
 };
 const periodProfiles = {
   today: { name: "今日", lens: "看24小时内的精力、可撤回性和是否挤占正事", action: "只处理今天能承受后果的动作" },
@@ -376,6 +388,10 @@ function getFollowupTemplate(context) {
   return followupTemplates[context.key] || followupTemplates["普通可逆"];
 }
 
+function getContextDisplayName(key) {
+  return contextDisplayNames[key] || key;
+}
+
 function renderFollowups() {
   const question = $("question").value.trim();
   if (!question) {
@@ -385,9 +401,9 @@ function renderFollowups() {
   }
   const context = getDecisionContext(question);
   const prompts = getFollowupTemplate(context);
-  setInputHint(`已识别为「${context.key}」，补充下面两项会让建议更贴近你。`);
+  setInputHint(`已识别为「${getContextDisplayName(context.key)}」，补充下面两项会让建议更贴近你。`);
   $("followupBox").hidden = false;
-  $("followupType").textContent = context.key;
+  $("followupType").textContent = getContextDisplayName(context.key);
   $("followupLabel1").firstChild.textContent = prompts[0][0];
   $("followupLabel2").firstChild.textContent = prompts[1][0];
   $("followup1").placeholder = prompts[0][1];
@@ -409,48 +425,6 @@ function assessFollowups(context, risk) {
   const details = answers.map((answer, index) => `补充${index + 1}：${answer}`);
   const summary = score >= 6 ? "关键补充增强了可执行性" : score <= -4 ? "关键补充暴露了现实阻力" : "关键补充提供了中性参考";
   return { score, summary, details };
-}
-
-function getDecisionSummary(decision, score, context, confidence) {
-  if (decision === "适合做") return `我的建议是：可以做，但别做过头。先把边界定清楚，尤其看${context.signal}。`;
-  if (decision === "建议缓做") return `我的建议是：先别急着定。不是不能做，是现在还差一点信息，先把${context.signal}弄清楚。`;
-  return `我的建议是：这次先不要硬上。不是否定这件事，而是现在最该先处理${context.signal}。`;
-}
-
-function getHumanTitle(decision, context) {
-  if (decision === "适合做") {
-    if (context.key === "低成本娱乐") return "可以去，别把小事想太重";
-    if (context.key === "关系表达") return "可以说，但别逼对方立刻表态";
-    if (context.key === "职业沟通") return "可以谈，先把底线拿稳";
-    if (context.key === "学习投入") return "可以开始，先试一小步";
-    if (context.key === "健康调整") return "可以做低强度版本";
-    if (context.key === "资产承诺") return "可以推进了解，先别急着付钱";
-    if (context.key === "一般购买") return "可以买，但先守住预算";
-    return "可以推进一小步";
-  }
-  if (decision === "建议缓做") {
-    if (context.key === "低成本娱乐") return "可以换个更轻松的时间";
-    if (context.key === "资产承诺") return "先缓一下，把账算清楚";
-    if (context.key === "一般购买") return "先放进清单，明天再看";
-    if (context.key === "关系表达") return "先缓一下，把话想清楚";
-    return "先缓一下，把关键条件补齐";
-  }
-  if (context.key === "低成本娱乐") return "今天先别勉强安排";
-  if (context.key === "资产承诺") return "先别下单或承诺资金";
-  if (context.key === "一般购买") return "先别买，等冲动过去";
-  if (context.key === "高承诺低可逆") return "先别做会改变路径的大决定";
-  return "这次先别硬做";
-}
-
-function getWhyNowText(score, decisionContext, timeContext, followup, confidence) {
-  const scoreText = `倾向值 ${score}，可信度${confidence}`;
-  if (followup.score <= -4) {
-    return `${scoreText}。主要卡点不是玄学，而是你补充的信息里还有现实阻力：${followup.summary}。`;
-  }
-  if (followup.score >= 6) {
-    return `${scoreText}。你补充的信息让这件事更落地，当前更适合按小步骤推进。`;
-  }
-  return `${scoreText}。按${timeContext.name}来看，重点不是马上求一个完美答案，而是先守住${decisionContext.signal}。`;
 }
 
 function getBirthCorrectionSummary(bazi) {
@@ -1218,8 +1192,18 @@ function buildResult() {
   const element = elementAdvice[signProfile.element] || elementAdvice["未定"];
   const sensitive = risk !== "normal";
   const confidence = getConfidence(state.profile, state.profile.mode || "综合", bazi);
-  $("resultTitle").textContent = getHumanTitle(decision, decisionContext);
-  $("resultMeta").textContent = `${periodName(state.period)} · ${decision} · ${state.profile.mode || "综合"} · ${decisionContext.key} · 倾向值 ${score}`;
+  const humanAdvice = buildHumanAdvice({
+    question,
+    decision,
+    score,
+    confidence,
+    decisionContext,
+    timeContext,
+    followup,
+    seed
+  });
+  $("resultTitle").textContent = humanAdvice.title;
+  $("resultMeta").textContent = `${periodName(state.period)} · ${decision} · ${state.profile.mode || "综合"} · ${getContextDisplayName(decisionContext.key)} · 倾向值 ${score}`;
   $("decisionBadge").textContent = decision;
   $("decisionBadge").className = `badge ${cls}`;
 
@@ -1230,13 +1214,11 @@ function buildResult() {
   ];
   detailReasons.push(...getModeEvidence(state.profile.mode, sign, signProfile, bazi, tarotCards, question, decisionContext));
   const scoreParts = formatScoreParts(assessment.parts);
-  const decisionAction = getDecisionAction(question, decision, frame, decisionContext);
-  const humanSummary = getDecisionSummary(decision, score, decisionContext, confidence);
-  const whyNow = getWhyNowText(score, decisionContext, timeContext, followup, confidence);
+  const decisionAction = humanAdvice.action;
   $("reasonList").innerHTML = [
-    humanSummary,
-    `你现在要做的不是继续想，而是：${decisionAction}`,
-    `${whyNow} 主要影响：${scoreParts}。`
+    humanAdvice.lead,
+    `下一步：${decisionAction}`,
+    `${humanAdvice.why} 主要影响：${scoreParts}。`
   ].map((item) => `<p>${escapeHTML(item)}</p>`).join("");
   state.lastShareText = buildShareText({
     question,
@@ -1264,7 +1246,7 @@ function buildResult() {
     decision,
     score,
     period: periodName(state.period),
-    meta: `${signProfile.element}${signProfile.mode} / ${zodiac}${zodiacProfile.element} / ${decisionContext.key}`,
+    meta: `${signProfile.element}${signProfile.mode} / ${zodiac}${zodiacProfile.element} / ${getContextDisplayName(decisionContext.key)}`,
     followup: followup.summary,
     feedback: null,
     time: new Date().toLocaleString("zh-CN", { hour12: false })

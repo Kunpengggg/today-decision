@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="今天要不要是一个轻量决策灵感工具，用星座、生肖八字和塔罗参考，帮助你在犹豫时获得更清楚的下一步。">
+  <meta name="theme-color" content="#2d6f55">
+  <meta property="og:title" content="今天要不要">
+  <meta property="og:description" content="写下纠结事项，获得做、缓做或不做的轻决策建议。">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="manifest.json">
+  <title>今天要不要 | 轻决策灵感工具</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211b;
+      --muted: #617064;
+      --line: #d7dfd8;
+      --paper: #f7f5ef;
+      --panel: #ffffff;
+      --green: #2d6f55;
+      --green-2: #e4f0e8;
+      --red: #a24036;
+      --amber: #b87621;
+      --blue: #315f87;
+      --shadow: 0 18px 50px rgba(35, 44, 37, .12);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(228, 240, 232, .92), rgba(247, 245, 239, .75)),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80") center/cover fixed;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(26px, 4vw, 52px);
+      line-height: 1.03;
+      letter-spacing: 0;
+      max-width: 760px;
+    }
+
+    .sub {
+      max-width: 720px;
+      margin-top: 14px;
+      color: #35453a;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border: 1px solid rgba(23, 33, 27, .15);
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      color: #344339;
+      white-space: nowrap;
+    }
+
+    .hero {
+      min-height: 34vh;
+      display: grid;
+      align-content: end;
+      padding: 56px 0 28px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel, .card {
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(215,223,216,.86);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    details {
+      margin: -2px 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45,111,85,.12);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .seg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f1f4ef;
+      margin-bottom: 12px;
+    }
+
+    .seg button {
+      min-height: 36px;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .seg button.active {
+      color: #fff;
+      background: var(--green);
+    }
+
+    .primary {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--green);
+      font-weight: 700;
+    }
+
+    .ghost {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 8px;
+      color: var(--green);
+      background: var(--green-2);
+      font-weight: 700;
+    }
+
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .danger {
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 8px;
+      color: var(--red);
+      background: #f7e7e4;
+      font-weight: 700;
+    }
+
+    .hint {
+      margin: -4px 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: -4px 0 12px;
+    }
+
+    .chip {
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: var(--green);
+      background: var(--green-2);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .result {
+      padding: 22px;
+      min-height: 460px;
+    }
+
+    .decision {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .go { background: var(--green); }
+    .wait { background: var(--amber); }
+    .stop { background: var(--red); }
+
+    .score {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .reason {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0;
+      line-height: 1.75;
+    }
+
+    .result-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: -4px 0 14px;
+    }
+
+    .result-tools[hidden] {
+      display: none;
+    }
+
+    .tool-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: #f4f6f2;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .tool-status {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .feedback {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,.72);
+      display: grid;
+      gap: 10px;
+      margin: -4px 0 14px;
+    }
+
+    .feedback[hidden] {
+      display: none;
+    }
+
+    .feedback-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .feedback-title span {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .feedback-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .feedback-actions button {
+      min-height: 34px;
+      border-radius: 8px;
+      background: #f4f6f2;
+      color: var(--ink);
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .feedback-actions button.active {
+      border-color: var(--green);
+      background: var(--green-2);
+      color: var(--green);
+    }
+
+    .followup {
+      margin: 12px 0 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.68);
+      display: grid;
+      gap: 10px;
+    }
+
+    .followup[hidden] {
+      display: none;
+    }
+
+    .followup-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .followup-title span {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .analysis {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 12px;
+      margin-top: 14px;
+      align-items: start;
+    }
+
+    .analysis[hidden] {
+      display: none;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+      background: #fbfcfa;
+    }
+
+    .mini.wide {
+      grid-row: span 2;
+    }
+
+    .mini h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .mini p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .history {
+      margin-top: 18px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .history-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(255,255,255,.75);
+    }
+
+    .history-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .history-item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .fineprint {
+      margin-top: 12px;
+      color: #6e7b71;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 840px) {
+      .app { width: min(100% - 22px, 720px); padding-top: 18px; }
+      header { align-items: flex-start; }
+      .pill { display: none; }
+      .hero { min-height: auto; padding: 36px 0 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .analysis { grid-template-columns: 1fr; }
+      .mini.wide { grid-row: auto; }
+      .decision { display: grid; }
+      .feedback-actions { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="mark">问</div>
+        <div>
+          <strong>今天要不要</strong>
+          <p class="fineprint">传统文化灵感 · 轻决策陪伴</p>
+        </div>
+      </div>
+      <div class="pill">本地保存，无需注册</div>
+    </header>
+
+    <section class="hero">
+      <h1>有点纠结？先看这件事现在该不该做。</h1>
+      <p class="sub">写下你正在犹豫的事，选择今日、本月或本年。先给你一个能执行的建议，再把星座、八字和塔罗作为参考依据。</p>
+    </section>
+
+    <section class="grid">
+      <aside class="panel">
+        <h2>个人信息</h2>
+        <p class="hint">可先只填生日和问题。出生时间、地点越准确，生肖八字模式越细。</p>
+        <label>昵称
+          <input id="nickname" placeholder="比如：小林">
+        </label>
+        <div class="row">
+          <label>生日
+            <input id="birthday" type="date">
+          </label>
+          <label>出生时间
+            <input id="birthTime" type="time">
+          </label>
+        </div>
+        <details>
+          <summary>只记得大概时辰</summary>
+          <label>出生时辰
+            <select id="birthHour">
+              <option value="unknown">不确定</option>
+              <option value="子">子时 23-01</option>
+              <option value="丑">丑时 01-03</option>
+              <option value="寅">寅时 03-05</option>
+              <option value="卯">卯时 05-07</option>
+              <option value="辰">辰时 07-09</option>
+              <option value="巳">巳时 09-11</option>
+              <option value="午">午时 11-13</option>
+              <option value="未">未时 13-15</option>
+              <option value="申">申时 15-17</option>
+              <option value="酉">酉时 17-19</option>
+              <option value="戌">戌时 19-21</option>
+              <option value="亥">亥时 21-23</option>
+            </select>
+          </label>
+        </details>
+        <div class="row">
+          <label>出生地点
+            <input id="birthPlace" placeholder="如：上海、乌鲁木齐、成都">
+          </label>
+        </div>
+
+        <label>分析模式
+          <select id="mode">
+            <option value="综合">综合</option>
+            <option value="星座">星座</option>
+            <option value="生肖八字">生肖/八字灵感</option>
+            <option value="塔罗">塔罗</option>
+          </select>
+        </label>
+
+        <h2>我要不要</h2>
+        <div class="seg" role="tablist" aria-label="时间范围">
+          <button class="active" data-period="today">今日</button>
+          <button data-period="month">本月</button>
+          <button data-period="year">本年</button>
+        </div>
+        <label>纠结事项
+          <textarea id="question" placeholder="直接写你的纠结，比如：要不要去看电影？"></textarea>
+        </label>
+        <div class="followup" id="followupBox" hidden>
+          <div class="followup-title">关键补充 <span id="followupType">可选</span></div>
+          <label id="followupLabel1">补充 1
+            <input id="followup1" placeholder="简单写一句就行">
+          </label>
+          <label id="followupLabel2">补充 2
+            <input id="followup2" placeholder="简单写一句就行">
+          </label>
+        </div>
+        <div class="chips" aria-label="示例问题">
+          <button class="chip" data-random-question="true">换个问题</button>
+          <button class="chip" data-example="要不要今晚去看电影？">日常小事</button>
+          <button class="chip" data-example="要不要买这件有点贵的东西？">花钱购买</button>
+          <button class="chip" data-example="要不要辞职转型？">工作选择</button>
+          <button class="chip" data-example="要不要把这件事和对方说清楚？">关系沟通</button>
+        </div>
+        <p class="fineprint" id="inputHint">建议把问题写成“要不要做某件具体事”。</p>
+        <button class="primary" id="askBtn">生成建议</button>
+        <p class="fineprint">数据只保存在当前浏览器本机。结果仅作娱乐与自我反思参考，不构成医疗、法律、投资等重大决策建议。</p>
+      </aside>
+
+      <section class="panel result">
+        <div class="decision">
+          <div>
+            <h2 id="resultTitle">先输入一个问题</h2>
+            <p class="score" id="resultMeta">你的结果会保存在本机浏览器里。</p>
+          </div>
+          <span class="badge wait" id="decisionBadge">待生成</span>
+        </div>
+
+        <div class="reason" id="reasonList">
+          <p>适合 MVP 的第一步不是做完整命理系统，而是先验证“具体问题 + 温和建议 + 可分享结果”这个体验是否成立。</p>
+        </div>
+
+        <div class="result-tools" id="resultTools" hidden>
+          <button class="tool-btn" id="copyResultBtn">复制行动计划</button>
+          <button class="tool-btn" id="shareResultBtn">发给朋友看看</button>
+          <span class="tool-status" id="toolStatus" aria-live="polite"></span>
+        </div>
+
+        <div class="feedback" id="feedbackBox" hidden>
+          <div class="feedback-title">这次建议后来怎么样？ <span id="feedbackStatus">未复盘</span></div>
+          <div class="feedback-actions">
+            <button data-feedback="采纳了">采纳了</button>
+            <button data-feedback="先缓了">先缓了</button>
+            <button data-feedback="没帮助">没帮助</button>
+          </div>
+        </div>
+
+        <button class="ghost" id="toggleDetail">展开详细分析</button>
+        <div class="analysis" id="analysis" hidden>
+          <div class="mini">
+            <h3>为什么可以</h3>
+            <p id="chanceText">完成一次生成后展示。</p>
+          </div>
+          <div class="mini">
+            <h3>要避开什么</h3>
+            <p id="riskText">完成一次生成后展示。</p>
+          </div>
+          <div class="mini wide">
+            <h3>下一步与依据</h3>
+            <p id="actionText">完成一次生成后展示。</p>
+          </div>
+        </div>
+
+        <div class="history-head">
+          <h2>查询记录</h2>
+          <button class="danger" id="clearHistoryBtn">清除记录</button>
+        </div>
+        <div class="history" id="history"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="decision-rules.js?v=20260512-ux3"></script>
+  <script src="app.js?v=20260512-ux3"></script>
+</body>
+</html>

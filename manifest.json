@@ -1,0 +1,10 @@
+{
+  "name": "今天要不要",
+  "short_name": "要不要",
+  "description": "一个用星座、生肖八字和塔罗作为参考的轻决策灵感工具。",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f7f5ef",
+  "theme_color": "#2d6f55",
+  "lang": "zh-CN"
+}

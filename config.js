@@ -1,0 +1,1 @@
+window.DECISION_AI_ENDPOINT = "";

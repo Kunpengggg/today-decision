@@ -22,6 +22,17 @@ GitHub Pages 设置：
 4. Branch 选择 `main`，目录选择 `/root`。
 5. 保存后等待 GitHub 生成访问地址。
 
+## DeepSeek API
+
+前端已经预留 AI 接入。因为 API Key 不能放进静态页面，需要先部署一个 API 代理。
+
+相关文件：
+
+- `config.js`：填写你的代理接口地址。
+- `ai-client.js`：前端请求 AI 代理，并在失败时回退到本地算法。
+- `deepseek-worker.js`：Cloudflare Worker 代理示例。
+- `DEPLOY_DEEPSEEK.md`：完整接入步骤。
+
 ## 隐私
 
 当前版本不使用数据库，不需要后端。生日、出生时间、地点、查询记录和复盘反馈都保存在用户自己的浏览器 `localStorage` 中。
